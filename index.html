@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="assets/css/styles.css">
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+	</head>
+	
+	<body onload="">
+		<div class="chat_window">
+			<div class="chat_messages_container"></div>
+			<div class="chat_options_container">
+				<input type="text" placeholder="send a message to your opponent" onfocus="this.placeholder = ''" onblur="this.placeholder = 'send a message to your opponent'" class="chat_input">
+				<input type="button" value="send message" class="send_message_button">
+			</div>
+		</div>
+	</body>
+	
+	<script>
+		var config = {
+			apiKey: "AIzaSyA7z1TRd0w3633MNlyQnHIQSytUAs2qWMY",
+			authDomain: "oylo-firebase.firebaseapp.com",
+			databaseURL: "https://oylo-firebase.firebaseio.com",
+			projectId: "oylo-firebase",
+			storageBucket: "",
+			messagingSenderId: "667579647767"
+		};
+
+		firebase.initializeApp(config);
+
+		var database = firebase.database();
+		var list_of_messages = ["GAME CHAT"];
+		var name = "";
+
+		database.ref().on("value", function(snapshot) {
+			console.log(snapshot.val().chat_messages);
+			
+			name = snapshot.val().name;
+			list_of_messages = snapshot.val().chat_messages;
+			
+			generate_chat_messages(list_of_messages);
+		}, function(errorObject) {
+			console.log("errors handled: " + errorObject.code);
+		});
+		
+		$(".send_message_button").on('click', function() {
+			list_of_messages.push($(".chat_input").val());
+			$(".chat_input").val("");
+			
+			set_firebase_data();
+			generate_chat_messages(list_of_messages);
+		});
+		
+		function set_firebase_data() {
+			database.ref().set({
+				chat_messages: list_of_messages,
+			});
+		}
+		
+		//generate messages from firebase array and append them to the chat_messages_container
+		function generate_chat_messages(chat_messages_array) {
+			var chat_messages_container = $(".chat_messages_container");
+			
+			chat_messages_container.empty();
+			
+			for (var i = 0; i < chat_messages_array.length; i++) {
+				var new_message = $('<p>');
+				
+				new_message.text(chat_messages_array[i]).addClass("chat_message");
+				
+				chat_messages_container.append(new_message);
+			}
+			
+			$(".chat_messages_container").animate({ scrollTop: $('.chat_messages_container').prop("scrollHeight")}, 250);
+		}
+	</script>
+</html>

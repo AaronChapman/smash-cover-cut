@@ -1,0 +1,23 @@
+body {
+	padding: 50px;
+	margin: 0;
+}
+
+.chat_messages_container {
+	position: relative;
+	max-height: 200px;
+	padding: 0 25px;
+	margin: auto;
+	overflow: scroll;
+	border: 1px solid #efefef;
+	margin-bottom: 25px;
+}
+
+.chat_options_container {
+	
+}
+
+.chat_window {
+	width: 50%;
+	margin: auto;
+}
