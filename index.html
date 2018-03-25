@@ -6,11 +6,12 @@
 		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+		<script src="assets/javascript/smash-cover-cut.js"></script>
 	</head>
 	
 	<body onload="">
 		<div class="game_window">
-			<div class="game_status">waiting for both players</div>
+			<div class="game_status">waiting for both players to chose</div>
 			<div class="red_options">
 				<ul>
 					<li><input type="button" value="rock" class="option_button red_option"></li>
@@ -36,157 +37,4 @@
 			</div>
 		</div>
 	</body>
-	
-	<script>
-		var config = {
-			apiKey: "AIzaSyA7z1TRd0w3633MNlyQnHIQSytUAs2qWMY",
-			authDomain: "oylo-firebase.firebaseapp.com",
-			databaseURL: "https://oylo-firebase.firebaseio.com",
-			projectId: "oylo-firebase",
-			storageBucket: "",
-			messagingSenderId: "667579647767"
-		};
-
-		firebase.initializeApp(config);
-
-		var database = firebase.database();
-		var list_of_messages = ["GAME CHAT"];
-		var red_choice = "", blue_choice = "";
-		var red_chose = false, blue_chose = false;
-		var red_wins = 0, blue_wins = 0, ties = 0;
-
-		database.ref().on("value", function(snapshot) {
-			console.log("got a database");
-			
-			list_of_messages = snapshot.val().chat_messages;
-			red_choice = snapshot.val().red_choice;
-			blue_choice = snapshot.val().blue_choice;
-			red_chose = snapshot.val().red_chose;
-			blue_chose = snapshot.val().blue_chose;
-			red_wins = snapshot.val().red_wins;
-			blue_wins = snapshot.val().blue_wins;
-			ties = snapshot.val().ties;
-			
-			$(".red_wins").text("wins: " + red_wins);
-			$(".blue_wins").text("wins: " + blue_wins);
-			
-			generate_chat_messages(list_of_messages);
-		}, function(errorObject) {
-			console.log("errors handled: " + errorObject.code);
-		});
-		
-		function update_firebase() {
-			console.log("updating database");
-			
-			database.ref().set({
-				chat_messages: list_of_messages,
-				red_choice: red_choice, 
-				blue_choice: blue_choice,
-				red_chose: red_chose,
-				blue_chose: blue_chose,
-				red_wins: red_wins,
-				blue_wins: blue_wins,
-				ties: ties
-			});
-		}
-		
-		$(".send_message_button").on('click', function() {
-			if ($(".chat_input").val()) {
-				list_of_messages.push($(".chat_input").val());
-				
-				$(".chat_input").val("");
-
-				update_firebase();
-				
-				generate_chat_messages(list_of_messages);
-			}
-		});
-		
-		$(".red_options").on("click", ".option_button", function() {
-			if (!red_chose) {
-				var choice = $(this).val();
-
-				red_choice = choice;
-				red_chose = true;
-				
-				$(".red_options").css('opacity', 0);
-				$(".game_status").text("red has chosen");
-
-				update_firebase();
-				
-				check_result();
-			}
-		});
-		
-		$(".blue_options").on("click", ".option_button", function() {
-			if (!blue_chose) {
-				var choice = $(this).val();
-
-				blue_choice = choice;
-				blue_chose = true;
-				
-				$(".blue_options").css('opacity', 0);
-				$(".game_status").text("blue has chosen");
-				
-				update_firebase();
-				
-				check_result();
-			}
-		});
-		
-		function check_result() {
-			var red_wins_temp = red_wins;
-			var blue_wins_temp = blue_wins;
-			
-			if (red_chose && blue_chose) {
-				if (red_choice === "rock" && blue_choice === "scissors")
-					red_wins++;
-				else if (red_choice === "scissors" && blue_choice === "paper")
-					red_wins++;
-				else if (red_choice === "paper" && blue_choice === "rock")
-					red_wins++;
-				else if (red_choice === blue_choice)
-					ties++;
-				else
-					blue_wins++;
-				
-				console.log(red_wins);
-				console.log(blue_wins);
-				
-				if (red_wins_temp < red_wins)
-					reveal("red");
-				else
-					reveal("blue");
-
-				red_choice = "", blue_choice = "";
-				red_chose = false, blue_chose = false;
-				
-				$(".red_options").css('opacity', 1);
-				$(".blue_options").css('opacity', 1);
-				
-				update_firebase();
-			}
-		}
-		
-		function reveal(winner) {
-			$(".game_status").text(winner + " won!");
-		}
-				
-		//generate messages from firebase array and append them to the chat_messages_container
-		function generate_chat_messages(chat_messages_array) {
-			var chat_messages_container = $(".chat_messages_container");
-			
-			chat_messages_container.empty();
-			
-			for (var i = 0; i < chat_messages_array.length; i++) {
-				var new_message = $('<p>');
-				
-				new_message.text(chat_messages_array[i]).addClass("chat_message");
-				
-				chat_messages_container.append(new_message);
-			}
-			
-			$(".chat_messages_container").animate({ scrollTop: $('.chat_messages_container').prop("scrollHeight")}, 250);
-		}
-	</script>
 </html>
