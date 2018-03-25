@@ -4,13 +4,16 @@
 	<head>
 		<link rel="stylesheet" href="assets/css/styles.css">
 		<link rel="stylesheet" href="https://oylo.info/css/csshake.css">
-		
+		<link rel="stylesheet" href="https://oylo.info/css/site-wide/directory-header.css">
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+		<script src="https://oylo.info/javascript/links_for_directory_header.js"></script>
 		<script src="assets/javascript/smash-cover-cut.js"></script>
 	</head>
-	
-	<body onload="">
+
+	<body id="page_body" onload="load_directory_header('https://crossorigin.me/http://oylo.info/resources/templates/directory_header.html')">
+		<div id="directory_header"></div>
 		<div class="game_window">
 			<div class="game_status">waiting for both players to chose</div>
 			<div class="red_options">
