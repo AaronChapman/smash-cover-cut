@@ -67,20 +67,7 @@ database.ref().on("value", function(snapshot) {
 $(document).ready(function() {
 	//if the send_message_button is clicked
 	$(".send_message_button").on('click', function() {
-		//and if the chat input isn't empty
-		if ($(".chat_input").val()) {
-			//push the new message to the messages array
-			list_of_messages.push($(".chat_input").val());
-
-			//clear the chat input field
-			$(".chat_input").val("");
-
-			//update firebase data
-			update_firebase();
-
-			//regenerate messages
-			generate_chat_messages(list_of_messages);
-		}
+		actually_send_message();
 	});
 
 	//if an option from the red_options panel is clicked
@@ -134,6 +121,14 @@ $(document).ready(function() {
 			check_result();
 		}
 	});
+});
+
+//pick up 'enter' key presses for game chat
+$(document).keypress(function(e) {
+	var keycode = (e.keyCode ? e.keyCode : e.which);
+	
+	if (keycode == '13')
+		actually_send_message();
 });
 
 //update firebase data
@@ -196,7 +191,7 @@ function reveal(winner) {
 	if (winner === "tie")
 		game_status.text("it was a tie!");
 	else {
-		game_status.text(winner + " won! - get ready for the next game...");
+		game_status.text(winner + " won! --- get ready...");
 		
 		if (winner === "red") {
 			game_status.css('color', '#884545');
@@ -205,6 +200,7 @@ function reveal(winner) {
 		}
 	}
 	
+	//a e s t h e t i c
 	shake_element(".game_status", "-default");
 	shake_element(".game_window", "-default");
 
@@ -238,6 +234,24 @@ function generate_chat_messages(chat_messages_array) {
 	
 	//scroll to the bottom of the container (that's the direction chats usually flow in right?)
 	$(".chat_messages_container").animate({ scrollTop: $('.chat_messages_container').prop("scrollHeight")}, 250);
+}
+
+//sends a new message to the chat
+function actually_send_message() {
+	//if the chat input is not empty
+	if ($(".chat_input").val()) {
+		//push the new message to the messages array
+		list_of_messages.push($(".chat_input").val());
+
+		//clear the chat input field
+		$(".chat_input").val("");
+
+		//update firebase data
+		update_firebase();
+
+		//regenerate messages
+		generate_chat_messages(list_of_messages);
+	}
 }
 
 /* add specified shaking classes to element matching id passed to element_id parameter */
