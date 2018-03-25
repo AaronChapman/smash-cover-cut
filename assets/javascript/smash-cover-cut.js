@@ -14,7 +14,7 @@ firebase.initializeApp(config);
 //firebase database reference
 var database = firebase.database();
 //array of chat messages
-var list_of_messages = ["GAME CHAT"];
+var list_of_messages = ["+ + + public chat + + +"];
 //player round choices
 var red_choice = "", blue_choice = "";
 //booleans to determine if players have chosen
@@ -55,7 +55,7 @@ database.ref().on("value", function(snapshot) {
 	//check if both players have chosen
 	if (red_chose && blue_chose)
 		check_result();
-
+	
 	//generate chat messages
 	generate_chat_messages(list_of_messages);
 }, function(errorObject) {
@@ -190,18 +190,30 @@ function check_result() {
 
 //reveal game state
 function reveal(winner) {
+	var game_status = $(".game_status");
+	
 	//check to see if there was a winner
 	if (winner === "tie")
-		$(".game_status").text("it was a tie!");
-	else
-		$(".game_status").text(winner + " won! - get ready for the next game...");
+		game_status.text("it was a tie!");
+	else {
+		game_status.text(winner + " won! - get ready for the next game...");
+		
+		if (winner === "red") {
+			game_status.css('color', '#884545');
+		} else if (winner === "blue") {
+			game_status.css('color', '#454588');
+		}
+	}
+	
+	shake_element(".game_status", "-default");
+	shake_element(".game_window", "-default");
 
 	//reset game options after two seconds
 	setTimeout(function() {
-		$(".game_status").text("waiting for both players to chose");
+		$(".game_status").text("waiting for both players to chose").css('color', 'black');
 		$(".red_options").css('opacity', 1);
 		$(".blue_options").css('opacity', 1);
-	}, 2000);
+	}, 2750);
 }
 
 //generate messages from firebase array and append them to the chat_messages_container
@@ -211,9 +223,9 @@ function generate_chat_messages(chat_messages_array) {
 
 	//empty it out
 	chat_messages_container.empty();
-
+	
 	//for each message in the chat messages array...
-	for (var i = 0; i < chat_messages_array.length; i++) {
+	for (var i = 0; i < (Object.keys(chat_messages_array).length); i++) {
 		//create a paragraph element
 		var new_message = $('<p>');
 
@@ -226,4 +238,17 @@ function generate_chat_messages(chat_messages_array) {
 	
 	//scroll to the bottom of the container (that's the direction chats usually flow in right?)
 	$(".chat_messages_container").animate({ scrollTop: $('.chat_messages_container').prop("scrollHeight")}, 250);
+}
+
+/* add specified shaking classes to element matching id passed to element_id parameter */
+function shake_element(element_id, type_of_shake) {
+	$(`${element_id}`).addClass("shake").addClass("shake-constant");
+
+	/* and then remove them after specified amount of time */
+	setTimeout(function() { stop_shaking_element(`${element_id}`, type_of_shake); }, 2750);
+}
+
+/* remove specified shaking classes from element matching id passed to element_id parameter */
+function stop_shaking_element(element_id, type_of_shake) {
+	$(`${element_id}`).removeClass("shake").removeClass("shake-constant");
 }

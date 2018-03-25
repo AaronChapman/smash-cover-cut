@@ -72,6 +72,8 @@ ul {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	font-size: 32px;
+	opacity: 0.75;
 }
 
 .game_window {
@@ -85,6 +87,7 @@ ul {
 	background: white;
 	box-shadow: 0 2px 5px #999999;
 	opacity: 0.975;
+	padding: 25px;
 }
 
 .option_button {
@@ -105,7 +108,7 @@ ul {
 }
 
 .red_wins, .blue_wins {
-	font-size: 10px;
+	font-size: 14px;
 }
 
 .red_options, .blue_options {
@@ -115,6 +118,7 @@ ul {
 .red_option, .blue_option {
 	box-shadow: 0 2px 5px #999999;
 	border-radius: 50px;
+	font-size: 14px;
 }
 
 .red_option:hover, .blue_option:hover {
