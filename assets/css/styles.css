@@ -4,6 +4,9 @@
 }
 
 body {
+	background: url(../images/smash-cover-cut-background.png);
+	background-position: center;
+	background-size: cover;
 	padding: 50px;
 	margin: 0;
 }
@@ -18,11 +21,13 @@ ul {
 }
 
 .chat_input {
-	min-width: 300px;
+	width: -webkit-fill-available;
 	height: 30px;
 	text-align: center;
 	margin-right: 5%;
-	border: 1px solid black;
+	border: 1px solid white;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px #999999;
 }
 
 .chat_messages_container {
@@ -31,18 +36,31 @@ ul {
 	padding: 0 25px;
 	margin: auto;
 	overflow: scroll;
-	border: 1px solid black;
 	border-radius: 15px;
 	margin-bottom: 25px;
+	background: #7C444C;
+	box-shadow: 0 2px 5px #999999;
+	opacity: 0.975;
+	max-width: 600px;
+	min-width: 50%;
+}
+
+.chat_messages_container p {
+	color: white;
 }
 
 .chat_options_container {
 	display: inline-flex;
-	width: 50%;
+	width: 100%;
+	max-width: 600px;
+	min-width: 50%;
+	margin: auto;
+
 }
 
 .chat_window {
-	width: 50%;
+	display: grid;
+	width: 100%;
 	margin: auto;
 }
 
@@ -58,14 +76,15 @@ ul {
 
 .game_window {
 	max-width: 600px;
-	min-width: 50%;
 	margin: auto;
 	text-align: center;
 	display: flex;
-	border: 1px solid black;
 	border-radius: 15px;
 	margin-bottom: 25px;
 	flex-wrap: wrap;
+	background: white;
+	box-shadow: 0 2px 5px #999999;
+	opacity: 0.975;
 }
 
 .option_button {
@@ -74,9 +93,15 @@ ul {
 }
 
 .send_message_button, .option_button {
-	min-width: 150px;
+	width: 150px;
 	text-align: center;
 	border: 1px solid black;
+}
+
+.send_message_button {
+	border: 1px solid white;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px #999999;
 }
 
 .red_wins, .blue_wins {
